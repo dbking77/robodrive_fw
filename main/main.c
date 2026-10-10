@@ -33,6 +33,7 @@
 
 void app_main(void)
 {
+    ESP_LOGW(ROBODRIVE_TAG, "Robodrive board rev %c", ROBODRIVE_BOARD_REV);
     GPIO_Init();
     AdcContinuous_Init();
     void AdcContinuous_Read();
@@ -45,8 +46,8 @@ void app_main(void)
     uint32_t led_flash_counter = 0;
     uint32_t adc_count = 0;
 
-    const float fwd_full_scale = 1.05f;
-    const float turn_full_scale = 0.5f;
+    const float fwd_full_scale = 1.0f;
+    const float turn_full_scale = 1.0f;
     const float weapon_full_scale = 1.0f;
 
     const float fwd_scale = 0.01f * fwd_full_scale;
@@ -71,8 +72,8 @@ void app_main(void)
             //ESP_LOGE("CMD", "fwd %d right %d weapon %d", (int)cmd.r_joy_fwd, (int)cmd.r_joy_right, (int)cmd.l_joy_fwd);
             float fwd = cmd.r_joy_fwd * fwd_scale;
             float right = cmd.r_joy_right * turn_scale;
-            duty_ratio_a = fwd - right;
-            duty_ratio_b = fwd + right;
+            duty_ratio_a = (fwd - right);
+            duty_ratio_b = (fwd + right);
             weapon_enable = true;
             duty_ratio_weapon = cmd.l_joy_fwd * weapon_scale;
             //ESP_LOGE("CMD", "duty_a %f duty_b %f weapon %f", duty_ratio_a, duty_ratio_b, duty_ratio_weapon);

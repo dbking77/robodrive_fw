@@ -17,3 +17,11 @@ idf_component_register(
         esp_driver_gpio
         esp_driver_mcpwm
 )
+
+# Select board with: idf.py -B build_revA -DROBODRIVE_BOARD_REV=A build
+# The value is cached per build directory.
+set(ROBODRIVE_BOARD_REV "" CACHE STRING "Robodrive board revision (A or B)")
+if(NOT ROBODRIVE_BOARD_REV MATCHES "^[AB]$")
+    message(FATAL_ERROR "Set board revision: idf.py -B build_revA -DROBODRIVE_BOARD_REV=A build  (or B)")
+endif()
+target_compile_definitions(${COMPONENT_LIB} PRIVATE ROBODRIVE_BOARD_REV_${ROBODRIVE_BOARD_REV})
